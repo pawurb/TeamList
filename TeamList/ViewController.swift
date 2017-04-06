@@ -27,14 +27,22 @@ class ViewController: UIViewController {
 
   func viewTapped() {
     RxAlamofire.requestString(.get, "https://www.elpassion.com/about-us/")
-    .subscribe(onNext: { (res, html) in
+    .map({ (res, html) -> [Any] in
       if let doc = HTML(html: html, encoding: .utf8) {
-        for member in doc.css(".team-member")  {
-          print(member.css(".member-name")[0].text!)
-          print(member.css(".member-img img")[0]["src"]!)
-        }
+        return doc.css(".team-member").map({ (node) in
+          return Member(node: node)
+        })
+      } else {
+        return []
       }
-
+    })
+//    .subscribe(onNext: { (res, html) in
+//      if let doc = HTML(html: html, encoding: .utf8) {
+//        for member in doc.css(".team-member")  {
+//          print(member.css(".member-name")[0].text!)
+//          print(member.css(".member-img img")[0]["src"]!)
+//        }
+//      }
     }).disposed(by: disposeBag)
     print("tap")
   }

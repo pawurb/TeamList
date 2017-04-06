@@ -14,6 +14,8 @@
 		6E2A83111E9635D500967F6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E2A83101E9635D500967F6E /* Assets.xcassets */; };
 		6E2A83141E9635D500967F6E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E2A83121E9635D500967F6E /* LaunchScreen.storyboard */; };
 		6E2A831F1E9635D600967F6E /* TeamListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2A831E1E9635D600967F6E /* TeamListTests.swift */; };
+		6E6827E81E9647D30052A13F /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6827E71E9647D30052A13F /* Member.swift */; };
+		6E6827EB1E9647E10052A13F /* MemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6827EA1E9647E10052A13F /* MemberCell.swift */; };
 		7EA3A373BCE6C5C6C92FD4BD /* Pods_TeamList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B2F93A43216437A3B4BBD2 /* Pods_TeamList.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +41,8 @@
 		6E2A831A1E9635D600967F6E /* TeamListTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TeamListTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E2A831E1E9635D600967F6E /* TeamListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamListTests.swift; sourceTree = "<group>"; };
 		6E2A83201E9635D600967F6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6E6827E71E9647D30052A13F /* Member.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		6E6827EA1E9647E10052A13F /* MemberCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberCell.swift; sourceTree = "<group>"; };
 		A0BE545198B1FD6C9BF17EA2 /* Pods-TeamListTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TeamListTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TeamListTests/Pods-TeamListTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D3FE1BC3AEB789619749967B /* Pods-TeamListTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TeamListTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TeamListTests/Pods-TeamListTests.release.xcconfig"; sourceTree = "<group>"; };
 		E736E4D2CB2E68B98820C6BC /* Pods_TeamListTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TeamListTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,8 +113,10 @@
 		6E2A83081E9635D500967F6E /* TeamList */ = {
 			isa = PBXGroup;
 			children = (
+				6E6827E91E9647D70052A13F /* Views */,
+				6E6827E61E9645CF0052A13F /* Models */,
+				6E6827E51E9645C90052A13F /* Controllers */,
 				6E2A83091E9635D500967F6E /* AppDelegate.swift */,
-				6E2A830B1E9635D500967F6E /* ViewController.swift */,
 				6E2A830D1E9635D500967F6E /* Main.storyboard */,
 				6E2A83101E9635D500967F6E /* Assets.xcassets */,
 				6E2A83121E9635D500967F6E /* LaunchScreen.storyboard */,
@@ -126,6 +132,30 @@
 				6E2A83201E9635D600967F6E /* Info.plist */,
 			);
 			path = TeamListTests;
+			sourceTree = "<group>";
+		};
+		6E6827E51E9645C90052A13F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				6E2A830B1E9635D500967F6E /* ViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		6E6827E61E9645CF0052A13F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6E6827E71E9647D30052A13F /* Member.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		6E6827E91E9647D70052A13F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6E6827EA1E9647E10052A13F /* MemberCell.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -333,7 +363,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E2A830C1E9635D500967F6E /* ViewController.swift in Sources */,
+				6E6827E81E9647D30052A13F /* Member.swift in Sources */,
 				6E2A830A1E9635D500967F6E /* AppDelegate.swift in Sources */,
+				6E6827EB1E9647E10052A13F /* MemberCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,6 +579,7 @@
 				6E2A83251E9635D600967F6E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6E2A83261E9635D600967F6E /* Build configuration list for PBXNativeTarget "TeamListTests" */ = {
 			isa = XCConfigurationList;
@@ -555,6 +588,7 @@
 				6E2A83281E9635D600967F6E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
