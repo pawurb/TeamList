@@ -18,22 +18,26 @@ class ViewController: UIViewController {
   private let disposeBag = DisposeBag()
   @IBOutlet weak var tableView: UITableView!
   var members: Variable<[Member]> = Variable([])
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     tableView.register(MemberCell.self, forCellReuseIdentifier: MemberCell.reuseIdentifier())
     tableView.rowHeight = 200
     
-    view.rx.tapGesture().when(.recognized)
-    .subscribe(onNext: { [weak self] _ in
-      self?.refresh()
-    }).disposed(by: disposeBag)
-
     members.asObservable().bindTo(tableView.rx.items(
         cellIdentifier: MemberCell.reuseIdentifier(),
         cellType: MemberCell.self)) { (_, member: Member, cell) in
           cell.setup(member: member)
     }.disposed(by: disposeBag)
+
+    tableView.rx.itemSelected.subscribe(onNext: { [weak self] _ in
+      if let selectedIndexPath = self?.tableView.indexPathForSelectedRow {
+        self?.tableView.deselectRow(at: selectedIndexPath, animated: true)
+        print("clicka")
+        self?.members.value[selectedIndexPath.row].toggleIsKnown()
+      }
+    }).disposed(by: disposeBag)
+
     refresh()
   }
 
