@@ -24,27 +24,35 @@ extension Member {
 
     self.name = name
     self.imageUrl = imageUrl
+    self.known = Member.isKnown(imageUrlString: imageUrl.absoluteString)
   }
 
-  static func setupKnownPeopleStorage() {
-    let defaults = UserDefaults.standard
-    defaults.set([], forKey: k_known_people)
-  }
+  static func isKnown(imageUrlString: String) -> Bool {
+    let currentlyKnown = currentlyKnownMaker()
 
-  func toggleIsKnown() {
-    let defaults = UserDefaults.standard
-    var currentlyKnown = [String]()
-    let imageUrlString = imageUrl.absoluteString
-    if let known = defaults.object(forKey: k_known_people) as? [String] {
-      currentlyKnown = known
-    } else {
-      Member.setupKnownPeopleStorage()
-      currentlyKnown = []
-    }
-
-    let isKnown: Bool = currentlyKnown.contains(where: { (imageUrlParam: String) -> Bool in
+    return currentlyKnown.contains(where: { (imageUrlParam: String) -> Bool in
       return imageUrlString == imageUrlParam
     })
+  }
+
+  static func currentlyKnownMaker() -> [String] {
+    let defaults = UserDefaults.standard
+
+    if let known = defaults.object(forKey: k_known_people) as? [String] {
+      return known
+    } else {
+      defaults.set([], forKey: k_known_people)
+      return []
+    }
+  }
+
+  mutating func toggleIsKnown() {
+    let defaults = UserDefaults.standard
+    let imageUrlString = imageUrl.absoluteString
+    let currentlyKnown = Member.currentlyKnownMaker()
+    let isKnown = Member.isKnown(imageUrlString: imageUrlString)
+
+    self.known = !isKnown
 
     var newKnownArray = [String]()
 

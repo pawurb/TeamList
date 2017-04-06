@@ -22,7 +22,7 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     tableView.register(MemberCell.self, forCellReuseIdentifier: MemberCell.reuseIdentifier())
-    tableView.rowHeight = 200
+    tableView.rowHeight = 150
     
     members.asObservable().bindTo(tableView.rx.items(
         cellIdentifier: MemberCell.reuseIdentifier(),
@@ -30,11 +30,12 @@ class ViewController: UIViewController {
           cell.setup(member: member)
     }.disposed(by: disposeBag)
 
-    tableView.rx.itemSelected.subscribe(onNext: { [weak self] _ in
-      if let selectedIndexPath = self?.tableView.indexPathForSelectedRow {
-        self?.tableView.deselectRow(at: selectedIndexPath, animated: true)
-        print("clicka")
-        self?.members.value[selectedIndexPath.row].toggleIsKnown()
+    tableView.rx.itemSelected.subscribe(onNext: { [unowned self] _ in
+      if let selectedIndexPath = self.tableView.indexPathForSelectedRow {
+        self.tableView.deselectRow(at: selectedIndexPath, animated: true)
+        var memberToToggle = self.members.value[selectedIndexPath.row]
+        memberToToggle.toggleIsKnown()
+        self.members.value[selectedIndexPath.row] = memberToToggle
       }
     }).disposed(by: disposeBag)
 
