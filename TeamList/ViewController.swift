@@ -21,16 +21,18 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+    tableView.register(MemberCell.self, forCellReuseIdentifier: MemberCell.reuseIdentifier())
+    tableView.rowHeight = 200
+    
     view.rx.tapGesture().when(.recognized)
     .subscribe(onNext: { [weak self] _ in
       self?.refresh()
     }).disposed(by: disposeBag)
 
     members.asObservable().bindTo(tableView.rx.items(
-        cellIdentifier: "Cell",
-        cellType: UITableViewCell.self)) { (_, member: Member, cell) in
-          cell.textLabel?.text = member.name
+        cellIdentifier: MemberCell.reuseIdentifier(),
+        cellType: MemberCell.self)) { (_, member: Member, cell) in
+          cell.setup(member: member)
     }.disposed(by: disposeBag)
     refresh()
   }
@@ -49,3 +51,4 @@ class ViewController: UIViewController {
     .disposed(by: disposeBag)
   }
 }
+
