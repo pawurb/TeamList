@@ -15,9 +15,9 @@ struct Member {
 }
 
 extension Member {
-  init?(node: XPathObject) {
+  init?(node: XMLElement) {
     guard let name = node.css(".member-name").first?.text else { return nil }
-    guard let imageUrl = URL(string: node.css(".member-img img").first?["src"])? else { return nil }
+    guard let imageUrl = URL(string: (node.css(".member-img img").first?["src"]!)!) else { return nil }
 
     self.name = name
     self.imageUrl = imageUrl

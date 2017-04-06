@@ -10,6 +10,7 @@ target 'TeamList' do
   pod 'Kanna', '~> 2.1.0'
   pod 'Alamofire', '~> 4.4'
   pod 'RxAlamofire'
+  pod 'AlamofireImage', '~> 3.1'
 
   target 'TeamListTests' do
     inherit! :search_paths

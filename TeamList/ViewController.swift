@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 import RxGesture
 import Alamofire
 import RxAlamofire
@@ -16,54 +17,35 @@ import Kanna
 class ViewController: UIViewController {
   private let disposeBag = DisposeBag()
   @IBOutlet weak var tableView: UITableView!
-
+  var members: Variable<[Member]> = Variable([])
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
     view.rx.tapGesture().when(.recognized)
     .subscribe(onNext: { [weak self] _ in
-      self?.viewTapped()
+      self?.refresh()
     }).disposed(by: disposeBag)
+
+    members.asObservable().bindTo(tableView.rx.items(
+        cellIdentifier: "Cell",
+        cellType: UITableViewCell.self)) { (_, member: Member, cell) in
+          cell.textLabel?.text = member.name
+    }.disposed(by: disposeBag)
+    refresh()
   }
 
-  func viewTapped() {
+  func refresh() {
     RxAlamofire.requestString(.get, "https://www.elpassion.com/about-us/")
-    .map({ (res, html) -> [Any] in
+    .map({ (res, html) -> [Member] in
       if let doc = HTML(html: html, encoding: .utf8) {
-        return doc.css(".team-member").map({ (node) in
+        return doc.css(".team-member").flatMap({ (node) in
           return Member(node: node)
         })
       } else {
         return []
       }
-    })
-//    .subscribe(onNext: { (res, html) in
-//      if let doc = HTML(html: html, encoding: .utf8) {
-//        for member in doc.css(".team-member")  {
-//          print(member.css(".member-name")[0].text!)
-//          print(member.css(".member-img img")[0]["src"]!)
-//        }
-//      }
-    }).disposed(by: disposeBag)
-    print("tap")
-  }
-}
-
-extension ViewController: UITableViewDelegate {
-
-}
-
-extension ViewController: UITableViewDataSource {
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 10
-  }
-
-  func numberOfSections(in tableView: UITableView) -> Int {
-    return 1
-  }
-
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell =  UITableViewCell(style: .default, reuseIdentifier: "cell")
-    cell.detailTextLabel?.text = "hello"
-    return cell
+    }).bindTo(members)
+    .disposed(by: disposeBag)
   }
 }
