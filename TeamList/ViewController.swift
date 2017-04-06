@@ -43,6 +43,16 @@ class ViewController: UIViewController {
           cell.setup(member: member)
     }.disposed(by: disposeBag)
 
+    members.asObservable()
+    .subscribe(onNext: { membersList in
+      let allCount = membersList.count
+      let knownCount = self.filteredByKnownStatus(members: membersList, filterValue: .Known).count
+      let unknownCount = allCount - knownCount
+      self.filterTabs.setTitle("All (\(allCount))", forSegmentAt: FilterValues.All.rawValue)
+      self.filterTabs.setTitle("Known (\(knownCount))", forSegmentAt: FilterValues.Known.rawValue)
+      self.filterTabs.setTitle("Unknown (\(unknownCount))", forSegmentAt: FilterValues.Unknown.rawValue)
+    }).disposed(by: disposeBag)
+
     tableView.rx.modelSelected(Member.self)
     .subscribe(onNext: { member in
       let toggledMember = member.toggledIsKnown()
@@ -78,6 +88,8 @@ class ViewController: UIViewController {
       make.left.equalTo(view.snp.left)
       make.right.equalTo(view.snp.right)
     })
+
+
   }
 
   func filteredByKnownStatus(members: [Member], filterValue: FilterValues) -> [Member] {
