@@ -13,19 +13,39 @@ import RxGesture
 import Alamofire
 import RxAlamofire
 import Kanna
+import SnapKit
+
+enum FilterValues: Int {
+  case All = 0
+  case Known = 1
+  case Unknown = 2
+}
 
 class ViewController: UIViewController {
   private let disposeBag = DisposeBag()
   @IBOutlet weak var tableView: UITableView!
   var members: Variable<[Member]> = Variable([])
+  let filterTabs: UISegmentedControl = UISegmentedControl(items: ["All", "Known", "Unknown"])
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupTabs()
     tableView.register(MemberCell.self, forCellReuseIdentifier: MemberCell.reuseIdentifier())
     tableView.rowHeight = 150
     tableView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0)
-    
-    members.asObservable().bindTo(tableView.rx.items(
+
+    Observable.combineLatest(members.asObservable(), filterTabs.rx.value) { ($0, $1) }
+    .map { (membersList, filterValue) in
+        return membersList.filter({ member in
+          if filterValue == FilterValues.All.rawValue {
+            return true
+          } else if filterValue == FilterValues.Unknown.rawValue {
+            return !member.known
+          } else {
+            return member.known
+          } 
+        })
+    }.bindTo(tableView.rx.items(
         cellIdentifier: MemberCell.reuseIdentifier(),
         cellType: MemberCell.self)) { (_, member: Member, cell) in
           cell.setup(member: member)
@@ -54,6 +74,18 @@ class ViewController: UIViewController {
       }
     }).bindTo(members)
     .disposed(by: disposeBag)
+  }
+
+  func setupTabs() {
+    view.addSubview(filterTabs)
+    filterTabs.translatesAutoresizingMaskIntoConstraints = false
+    filterTabs.selectedSegmentIndex = 0
+    filterTabs.snp.makeConstraints({ make in
+      make.top.equalTo(view.snp.top).offset(20)
+      make.bottom.equalTo(tableView.snp.top)
+      make.left.equalTo(view.snp.left)
+      make.right.equalTo(view.snp.right)
+    })
   }
 }
 

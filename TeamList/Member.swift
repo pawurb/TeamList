@@ -12,7 +12,7 @@ import Kanna
 struct Member {
   let name: String
   let imageUrl: URL
-  var known: Bool = false
+  let known: Bool
 }
 
 let k_known_people = "knownPeople"
@@ -63,7 +63,7 @@ extension Member {
     }
 
     defaults.set(newKnownArray, forKey: k_known_people)
-    
+
     return Member(name: name, imageUrl: imageUrl, known: !known)
   }
 }
