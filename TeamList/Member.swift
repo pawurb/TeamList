@@ -46,13 +46,11 @@ extension Member {
     }
   }
 
-  mutating func toggleIsKnown() {
+  func toggledIsKnown() -> Member {
     let defaults = UserDefaults.standard
     let imageUrlString = imageUrl.absoluteString
     let currentlyKnown = Member.currentlyKnownMaker()
     let isKnown = Member.isKnown(imageUrlString: imageUrlString)
-
-    self.known = !isKnown
 
     var newKnownArray = [String]()
 
@@ -65,6 +63,7 @@ extension Member {
     }
 
     defaults.set(newKnownArray, forKey: k_known_people)
-    print(newKnownArray)
+    
+    return Member(name: name, imageUrl: imageUrl, known: !known)
   }
 }

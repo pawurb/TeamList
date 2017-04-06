@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     tableView.register(MemberCell.self, forCellReuseIdentifier: MemberCell.reuseIdentifier())
     tableView.rowHeight = 150
+    tableView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0)
     
     members.asObservable().bindTo(tableView.rx.items(
         cellIdentifier: MemberCell.reuseIdentifier(),
@@ -33,9 +34,8 @@ class ViewController: UIViewController {
     tableView.rx.itemSelected.subscribe(onNext: { [unowned self] _ in
       if let selectedIndexPath = self.tableView.indexPathForSelectedRow {
         self.tableView.deselectRow(at: selectedIndexPath, animated: true)
-        var memberToToggle = self.members.value[selectedIndexPath.row]
-        memberToToggle.toggleIsKnown()
-        self.members.value[selectedIndexPath.row] = memberToToggle
+        let toggledMember = self.members.value[selectedIndexPath.row].toggledIsKnown()
+        self.members.value[selectedIndexPath.row] = toggledMember
       }
     }).disposed(by: disposeBag)
 
