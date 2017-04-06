@@ -36,34 +36,26 @@ class ViewController: UIViewController {
 
     Observable.combineLatest(members.asObservable(), filterTabs.rx.value) { ($0, $1) }
     .map { (membersList, filterValue) in
-        return membersList.filter({ member in
-          if filterValue == FilterValues.All.rawValue {
-            return true
-          } else if filterValue == FilterValues.Unknown.rawValue {
-            return !member.known
-          } else {
-            return member.known
-          } 
-        })
+      return self.filteredByKnownStatus(members: membersList, filterValue: FilterValues(rawValue: filterValue)!)
     }.bindTo(tableView.rx.items(
         cellIdentifier: MemberCell.reuseIdentifier(),
         cellType: MemberCell.self)) { (_, member: Member, cell) in
           cell.setup(member: member)
     }.disposed(by: disposeBag)
 
-    tableView.rx.itemSelected.subscribe(onNext: { [unowned self] _ in
-      if let selectedIndexPath = self.tableView.indexPathForSelectedRow {
-        self.tableView.deselectRow(at: selectedIndexPath, animated: true)
-        let toggledMember = self.members.value[selectedIndexPath.row].toggledIsKnown()
-        self.members.value[selectedIndexPath.row] = toggledMember
-      }
+    tableView.rx.modelSelected(Member.self)
+    .subscribe(onNext: { member in
+      let toggledMember = member.toggledIsKnown()
+      guard let index = self.members.value.index(where: { $0.imageUrl == member.imageUrl }) else { return }
+      self.members.value[index] = toggledMember
     }).disposed(by: disposeBag)
-
+    
     refresh()
   }
 
   func refresh() {
     RxAlamofire.requestString(.get, "https://www.elpassion.com/about-us/")
+    .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
     .map({ (res, html) -> [Member] in
       if let doc = HTML(html: html, encoding: .utf8) {
         return doc.css(".team-member").flatMap({ (node) in
@@ -72,7 +64,7 @@ class ViewController: UIViewController {
       } else {
         return []
       }
-    }).bindTo(members)
+    }).observeOn(MainScheduler.instance).bindTo(members)
     .disposed(by: disposeBag)
   }
 
@@ -85,6 +77,19 @@ class ViewController: UIViewController {
       make.bottom.equalTo(tableView.snp.top)
       make.left.equalTo(view.snp.left)
       make.right.equalTo(view.snp.right)
+    })
+  }
+
+  func filteredByKnownStatus(members: [Member], filterValue: FilterValues) -> [Member] {
+    return members.filter({ member in
+      switch(filterValue) {
+      case .All:
+        return true
+      case .Known:
+        return member.known
+      case .Unknown:
+        return !member.known
+      }
     })
   }
 }
