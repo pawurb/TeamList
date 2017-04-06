@@ -21,6 +21,8 @@ enum FilterValues: Int {
   case Unknown = 2
 }
 
+let DATA_URL = "https://www.elpassion.com/about-us/"
+
 class ViewController: UIViewController {
   private let disposeBag = DisposeBag()
   @IBOutlet weak var tableView: UITableView!
@@ -64,7 +66,18 @@ class ViewController: UIViewController {
   }
 
   func refresh() {
-    RxAlamofire.requestString(.get, "https://www.elpassion.com/about-us/")
+    let refresherView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    refresherView.translatesAutoresizingMaskIntoConstraints = false
+    refresherView.startAnimating()
+    view.addSubview(refresherView)
+    refresherView.snp.makeConstraints({ make in
+      make.centerX.equalTo(view.snp.centerX)
+      make.centerY.equalTo(view.snp.centerY)
+      make.width.equalTo(100)
+      make.height.equalTo(100)
+    })
+
+    RxAlamofire.requestString(.get, DATA_URL)
     .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
     .map({ (res, html) -> [Member] in
       if let doc = HTML(html: html, encoding: .utf8) {
@@ -74,7 +87,9 @@ class ViewController: UIViewController {
       } else {
         return []
       }
-    }).observeOn(MainScheduler.instance).bindTo(members)
+    }).observeOn(MainScheduler.instance).do(onNext: { _ in
+      refresherView.removeFromSuperview()
+    }).bindTo(members)
     .disposed(by: disposeBag)
   }
 
