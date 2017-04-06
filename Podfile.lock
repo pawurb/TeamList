@@ -8,6 +8,9 @@ PODS:
     - RxSwift (~> 3.0)
   - RxCocoa (3.3.1):
     - RxSwift (~> 3.3)
+  - RxGesture (1.0.0):
+    - RxCocoa (~> 3.0)
+    - RxSwift (~> 3.0)
   - RxSwift (3.3.1)
 
 DEPENDENCIES:
@@ -15,6 +18,7 @@ DEPENDENCIES:
   - Kanna (~> 2.1.0)
   - RxAlamofire
   - RxCocoa (~> 3.0)
+  - RxGesture
   - RxSwift (~> 3.0)
 
 SPEC CHECKSUMS:
@@ -22,8 +26,9 @@ SPEC CHECKSUMS:
   Kanna: 9b4b086c218703f2b94f5b21a466217dd2f9332e
   RxAlamofire: bc53604b29fd2d220cfaa490c736cc4500819f34
   RxCocoa: 7dcb7a1860fc9cd0e23dae67ab105fc2916670b6
+  RxGesture: df17ca8be513640294c544b3165875e91de665ec
   RxSwift: 8fc9f2de6275a9101d518444e00bf32f1a42caac
 
-PODFILE CHECKSUM: db3a7f0941c9236f5a178a6254e482065aacae58
+PODFILE CHECKSUM: 7fddabe74637aa8b65bc14d3c18aab843601d432
 
 COCOAPODS: 1.1.1
