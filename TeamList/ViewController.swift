@@ -29,7 +29,7 @@ class ViewController: UIViewController {
   var members: Variable<[Member]> = Variable([])
   let filterTabs: UISegmentedControl = UISegmentedControl(items: ["All", "Known", "Unknown"])
   let emitter = CAEmitterLayer()
-  let dot = CAEmitterCell()
+  let star = CAEmitterCell()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -38,20 +38,20 @@ class ViewController: UIViewController {
     tableView.rowHeight = 150
     tableView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0)
 
-    dot.scale = 0.3
-    dot.alphaSpeed = -1
-    dot.scaleRange = 0.2
-    dot.emissionRange = CGFloat.pi
-    dot.lifetime = 1.0
-    dot.velocity = 200
-    dot.velocityRange = 50
-    dot.yAcceleration = 250
-    dot.birthRate = 0
+    star.scale = 0.3
+    star.alphaSpeed = -1
+    star.scaleRange = 0.2
+    star.emissionRange = CGFloat.pi
+    star.lifetime = 1.0
+    star.velocity = 200
+    star.velocityRange = 50
+    star.yAcceleration = 250
+    star.birthRate = 0
 
-    dot.contents = UIImage(named: "happy_star")?.cgImage!
+    star.contents = UIImage(named: "happy_star")?.cgImage!
     emitter.frame = self.view.frame
     self.view.layer.addSublayer(emitter)
-    emitter.emitterCells = [dot]
+    emitter.emitterCells = [star]
 
     Observable.combineLatest(members.asObservable(), filterTabs.rx.value) { ($0, $1) }
     .map { (membersList, filterValue) in
@@ -89,10 +89,10 @@ class ViewController: UIViewController {
   func viewTapped(tap: UITapGestureRecognizer) {
     emitter.emitterPosition = tap.location(in: view)
     emitter.birthRate = 10
-    dot.birthRate = 2
+    star.birthRate = 4
 
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-      self.dot.birthRate = 0
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+      self.star.birthRate = 0
       self.emitter.birthRate = 0
     })
   }
