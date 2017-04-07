@@ -42,6 +42,7 @@ class MemberCell: UITableViewCell {
       make.right.equalTo(avatarImageView.snp.right)
     })
 
+    nameLabel.font = nameLabel.font.withSize(20)
     contentView.addSubview(nameLabel)
 
     nameLabel.snp.makeConstraints({ make in

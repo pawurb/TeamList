@@ -19,8 +19,8 @@ let k_known_people = "knownPeople"
 
 extension Member {
   init?(node: XMLElement) {
-    guard let name = node.css(".member-name").first?.text else { return nil }
-    guard let imageUrl = URL(string: (node.css(".member-img img").first?["src"]!)!) else { return nil }
+    guard let name = node.css(".member-name").first?.text?.components(separatedBy: " ").filter({ $0.characters.count > 0 }).first else { return nil }
+    guard let image = node.css(".member-img img").first, let imageUrlString = image["src"], let imageUrl = URL(string: imageUrlString) else { return nil }
 
     self.name = name
     self.imageUrl = imageUrl

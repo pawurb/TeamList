@@ -113,6 +113,7 @@
 		6E2A83081E9635D500967F6E /* TeamList */ = {
 			isa = PBXGroup;
 			children = (
+				6E484A131E97843A00B5A3A9 /* Extensions */,
 				6E6827E91E9647D70052A13F /* Views */,
 				6E6827E61E9645CF0052A13F /* Models */,
 				6E6827E51E9645C90052A13F /* Controllers */,
@@ -132,6 +133,13 @@
 				6E2A83201E9635D600967F6E /* Info.plist */,
 			);
 			path = TeamListTests;
+			sourceTree = "<group>";
+		};
+		6E484A131E97843A00B5A3A9 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		6E6827E51E9645C90052A13F /* Controllers */ = {
