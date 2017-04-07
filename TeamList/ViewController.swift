@@ -61,6 +61,33 @@ class ViewController: UIViewController {
       guard let index = self.members.value.index(where: { $0.imageUrl == member.imageUrl }) else { return }
       self.members.value[index] = toggledMember
     }).disposed(by: disposeBag)
+
+    let emitter = CAEmitterLayer()
+    emitter.frame = self.view.frame
+    let dot = CAEmitterCell()
+    dot.scale = 0.1
+    dot.scaleRange = 0.2
+    dot.emissionRange = CGFloat.pi
+    dot.lifetime = 5.0
+    dot.birthRate = 10
+    dot.velocity = 200
+    dot.velocityRange = 50
+    dot.yAcceleration = 250
+
+    let logo = UIImage(named: "el_passion")?.cgImage!
+    dot.contents = logo
+    emitter.emitterCells = [dot]
+    emitter.lifetime = 1.0
+    self.view.layer.addSublayer(emitter)
+
+    tableView.rx.panGesture().when(.changed)
+    .subscribe(onNext: { evt in
+      let point = evt.location(in: self.view)
+      emitter.position = point
+
+      print("x: \(point.x)")
+      print("y: \(point.y)")
+    }).disposed(by: disposeBag)
     
     refresh()
   }
@@ -103,8 +130,6 @@ class ViewController: UIViewController {
       make.left.equalTo(view.snp.left)
       make.right.equalTo(view.snp.right)
     })
-
-
   }
 
   func filteredByKnownStatus(members: [Member], filterValue: FilterValues) -> [Member] {

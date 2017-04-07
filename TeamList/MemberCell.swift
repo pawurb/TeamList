@@ -44,19 +44,20 @@ class MemberCell: UITableViewCell {
       make.right.equalTo(avatarImageView.snp.right)
     })
 
-    nameLabel.font = nameLabel.font.withSize(20)
+    nameLabel.font = nameLabel.font.withSize(25)
     nameLabel.numberOfLines = 2
     contentView.addSubview(nameLabel)
 
     nameLabel.snp.makeConstraints({ make in
       make.left.equalTo(avatarImageView.snp.rightMargin).offset(20)
       make.right.equalTo(contentView.snp.right).offset(-30)
-      make.centerY.equalTo(avatarImageView.snp.centerY).offset(-20)
+      make.centerY.equalTo(avatarImageView.snp.centerY).offset(-25)
     })
 
     contentView.addSubview(jobLabel)
     jobLabel.textColor = UIColor.gray
     jobLabel.numberOfLines = 2
+    jobLabel.font = jobLabel.font.withSize(20)
     jobLabel.snp.makeConstraints({ make in
       make.left.equalTo(avatarImageView.snp.rightMargin).offset(20)
       make.right.equalTo(contentView.snp.right).offset(-20)
