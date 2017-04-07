@@ -62,34 +62,44 @@ class ViewController: UIViewController {
       self.members.value[index] = toggledMember
     }).disposed(by: disposeBag)
 
+    let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.viewTapped))
+    tapRecognizer.cancelsTouchesInView = false
+    self.view.addGestureRecognizer(tapRecognizer)
+
+    refresh()
+  }
+
+  func viewTapped(tap: UITapGestureRecognizer) {
+    let point = tap.location(in: view)
     let emitter = CAEmitterLayer()
     emitter.frame = self.view.frame
+    emitter.emitterPosition = point
     let dot = CAEmitterCell()
-    dot.scale = 0.1
+    dot.scale = 0.3
     dot.scaleRange = 0.2
     dot.emissionRange = CGFloat.pi
-    dot.lifetime = 5.0
+    dot.lifetime = 1.0
     dot.birthRate = 10
     dot.velocity = 200
     dot.velocityRange = 50
     dot.yAcceleration = 250
-
-    let logo = UIImage(named: "el_passion")?.cgImage!
-    dot.contents = logo
     emitter.emitterCells = [dot]
-    emitter.lifetime = 1.0
+    emitter.autoreverses = false
+
+    let logo = UIImage(named: "happy_star")?.cgImage!
+    dot.contents = logo
     self.view.layer.addSublayer(emitter)
 
-    tableView.rx.panGesture().when(.changed)
-    .subscribe(onNext: { evt in
-      let point = evt.location(in: self.view)
-      emitter.position = point
+    let fadeOut = CABasicAnimation(keyPath: "opacity")
+    fadeOut.duration = 2.0
+    fadeOut.fromValue = 1.0
+    fadeOut.toValue = 0.0
+    fadeOut.autoreverses = false
+    emitter.add(fadeOut, forKey: nil)
 
-      print("x: \(point.x)")
-      print("y: \(point.y)")
-    }).disposed(by: disposeBag)
-    
-    refresh()
+    DispatchQueue.main.asyncAfter(deadline: .now() + 2.1, execute: {
+      emitter.removeFromSuperlayer()
+    })
   }
 
   func refresh() {
