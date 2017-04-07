@@ -11,6 +11,7 @@ import Kanna
 
 struct Member {
   let name: String
+  let job: String
   let imageUrl: URL
   let known: Bool
 }
@@ -20,9 +21,11 @@ let k_known_people = "knownPeople"
 extension Member {
   init?(node: XMLElement) {
     guard let name = node.css(".member-name").first?.text?.components(separatedBy: " ").filter({ $0.characters.count > 0 }).first else { return nil }
+    guard let job = node.css(".member-job").first?.text else { return nil }
     guard let image = node.css(".member-img img").first, let imageUrlString = image["src"], let imageUrl = URL(string: imageUrlString) else { return nil }
 
     self.name = name
+    self.job = job.trimmingCharacters(in: CharacterSet.whitespaces)
     self.imageUrl = imageUrl
     self.known = Member.isKnown(imageUrlString: imageUrl.absoluteString)
   }
@@ -64,6 +67,6 @@ extension Member {
 
     defaults.set(newKnownArray, forKey: k_known_people)
 
-    return Member(name: name, imageUrl: imageUrl, known: !known)
+    return Member(name: name, job: job, imageUrl: imageUrl, known: !known)
   }
 }

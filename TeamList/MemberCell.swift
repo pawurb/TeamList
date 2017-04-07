@@ -13,6 +13,7 @@ import SnapKit
 class MemberCell: UITableViewCell {
   let avatarImageView = UIImageView()
   let nameLabel = UILabel()
+  let jobLabel = UILabel()
   let placeholderImage = UIImage(named: "placeholder")!
   let crossedOutImage = UIImageView(image: UIImage(named: "cross_out"))
 
@@ -21,6 +22,7 @@ class MemberCell: UITableViewCell {
 
     avatarImageView.translatesAutoresizingMaskIntoConstraints = false
     nameLabel.translatesAutoresizingMaskIntoConstraints = false
+    jobLabel.translatesAutoresizingMaskIntoConstraints = false
     crossedOutImage.translatesAutoresizingMaskIntoConstraints = false
 
     contentView.addSubview(avatarImageView)
@@ -43,16 +45,28 @@ class MemberCell: UITableViewCell {
     })
 
     nameLabel.font = nameLabel.font.withSize(20)
+    nameLabel.numberOfLines = 2
     contentView.addSubview(nameLabel)
 
     nameLabel.snp.makeConstraints({ make in
       make.left.equalTo(avatarImageView.snp.rightMargin).offset(20)
-      make.centerY.equalTo(avatarImageView.snp.centerY)
+      make.right.equalTo(contentView.snp.right).offset(-30)
+      make.centerY.equalTo(avatarImageView.snp.centerY).offset(-20)
+    })
+
+    contentView.addSubview(jobLabel)
+    jobLabel.textColor = UIColor.gray
+    jobLabel.numberOfLines = 2
+    jobLabel.snp.makeConstraints({ make in
+      make.left.equalTo(avatarImageView.snp.rightMargin).offset(20)
+      make.right.equalTo(contentView.snp.right).offset(-20)
+      make.top.equalTo(nameLabel.snp.bottom).offset(10)
     })
   }
 
   func setup(member: Member) {
     nameLabel.text = member.name
+    jobLabel.text = member.job
     avatarImageView.af_setImage(withURL: member.imageUrl, placeholderImage: placeholderImage)
     if(member.known) {
       crossedOutImage.isHidden = false
