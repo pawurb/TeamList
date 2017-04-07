@@ -28,6 +28,8 @@ class ViewController: UIViewController {
   @IBOutlet weak var tableView: UITableView!
   var members: Variable<[Member]> = Variable([])
   let filterTabs: UISegmentedControl = UISegmentedControl(items: ["All", "Known", "Unknown"])
+  let emitter = CAEmitterLayer()
+  let dot = CAEmitterCell()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -35,6 +37,21 @@ class ViewController: UIViewController {
     tableView.register(MemberCell.self, forCellReuseIdentifier: MemberCell.reuseIdentifier())
     tableView.rowHeight = 150
     tableView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0)
+
+    dot.scale = 0.3
+    dot.alphaSpeed = -1
+    dot.scaleRange = 0.2
+    dot.emissionRange = CGFloat.pi
+    dot.lifetime = 1.0
+    dot.velocity = 200
+    dot.velocityRange = 50
+    dot.yAcceleration = 250
+    dot.birthRate = 0
+
+    dot.contents = UIImage(named: "happy_star")?.cgImage!
+    emitter.frame = self.view.frame
+    self.view.layer.addSublayer(emitter)
+    emitter.emitterCells = [dot]
 
     Observable.combineLatest(members.asObservable(), filterTabs.rx.value) { ($0, $1) }
     .map { (membersList, filterValue) in
@@ -70,35 +87,13 @@ class ViewController: UIViewController {
   }
 
   func viewTapped(tap: UITapGestureRecognizer) {
-    let point = tap.location(in: view)
-    let emitter = CAEmitterLayer()
-    emitter.frame = self.view.frame
-    emitter.emitterPosition = point
-    let dot = CAEmitterCell()
-    dot.scale = 0.3
-    dot.scaleRange = 0.2
-    dot.emissionRange = CGFloat.pi
-    dot.lifetime = 1.0
-    dot.birthRate = 10
-    dot.velocity = 200
-    dot.velocityRange = 50
-    dot.yAcceleration = 250
-    emitter.emitterCells = [dot]
-    emitter.autoreverses = false
+    emitter.emitterPosition = tap.location(in: view)
+    emitter.birthRate = 10
+    dot.birthRate = 2
 
-    let logo = UIImage(named: "happy_star")?.cgImage!
-    dot.contents = logo
-    self.view.layer.addSublayer(emitter)
-
-    let fadeOut = CABasicAnimation(keyPath: "opacity")
-    fadeOut.duration = 2.0
-    fadeOut.fromValue = 1.0
-    fadeOut.toValue = 0.0
-    fadeOut.autoreverses = false
-    emitter.add(fadeOut, forKey: nil)
-
-    DispatchQueue.main.asyncAfter(deadline: .now() + 2.1, execute: {
-      emitter.removeFromSuperlayer()
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+      self.dot.birthRate = 0
+      self.emitter.birthRate = 0
     })
   }
 
