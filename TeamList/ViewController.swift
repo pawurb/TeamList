@@ -73,7 +73,7 @@ class ViewController: UIViewController {
     }).disposed(by: disposeBag)
 
     tableView.rx.modelSelected(Member.self)
-    .subscribe(onNext: { member in
+    .subscribe(onNext: { [unowned self] member in
       let toggledMember = member.toggledIsKnown()
       guard let index = self.members.value.index(where: { $0.imageUrl == member.imageUrl }) else { return }
       self.members.value[index] = toggledMember
@@ -91,7 +91,7 @@ class ViewController: UIViewController {
     emitter.birthRate = 10
     star.birthRate = 4
 
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
       self.star.birthRate = 0
       self.emitter.birthRate = 0
     })

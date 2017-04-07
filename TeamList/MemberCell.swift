@@ -24,6 +24,7 @@ class MemberCell: UITableViewCell {
     nameLabel.translatesAutoresizingMaskIntoConstraints = false
     jobLabel.translatesAutoresizingMaskIntoConstraints = false
     crossedOutImage.translatesAutoresizingMaskIntoConstraints = false
+    selectionStyle = .none
 
     contentView.addSubview(avatarImageView)
 
