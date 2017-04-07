@@ -33,25 +33,12 @@ class ViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    setupTabs()
     tableView.register(MemberCell.self, forCellReuseIdentifier: MemberCell.reuseIdentifier())
     tableView.rowHeight = 150
     tableView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0)
-
-    star.scale = 0.3
-    star.alphaSpeed = -1
-    star.scaleRange = 0.2
-    star.emissionRange = CGFloat.pi
-    star.lifetime = 1.0
-    star.velocity = 200
-    star.velocityRange = 50
-    star.yAcceleration = 250
-    star.birthRate = 0
-
-    star.contents = UIImage(named: "happy_star")?.cgImage!
-    emitter.frame = self.view.frame
-    self.view.layer.addSublayer(emitter)
-    emitter.emitterCells = [star]
+    
+    setupTabs()
+    setupStars()
 
     Observable.combineLatest(members.asObservable(), filterTabs.rx.value) { ($0, $1) }
     .map { (membersList, filterValue) in
@@ -135,6 +122,23 @@ class ViewController: UIViewController {
       make.left.equalTo(view.snp.left)
       make.right.equalTo(view.snp.right)
     })
+  }
+
+  func setupStars() {
+    star.scale = 0.3
+    star.alphaSpeed = -1
+    star.scaleRange = 0.2
+    star.emissionRange = CGFloat.pi
+    star.lifetime = 1.0
+    star.velocity = 200
+    star.velocityRange = 50
+    star.yAcceleration = 250
+    star.birthRate = 0
+
+    star.contents = UIImage(named: "happy_star")?.cgImage!
+    emitter.frame = self.view.frame
+    self.view.layer.addSublayer(emitter)
+    emitter.emitterCells = [star]
   }
 
   func filteredByKnownStatus(members: [Member], filterValue: FilterValues) -> [Member] {
